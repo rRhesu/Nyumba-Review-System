@@ -1,0 +1,3 @@
+import Link from 'next/link'
+
+export function SiteFooter() { return <footer className="border-t bg-muted/30"><div className="mx-auto flex max-w-7xl flex-col gap-4 px-5 py-10 sm:flex-row sm:items-center sm:justify-between"><div><p className="font-semibold">Nyumba<span className="text-primary">Review</span></p><p className="mt-1 text-sm text-muted-foreground">Make confident renting decisions.</p></div><div className="flex gap-5 text-sm text-muted-foreground"><Link href="/apartments" className="hover:text-foreground">Browse homes</Link><Link href="/how-it-works" className="hover:text-foreground">How it works</Link><Link href="/list-your-property" className="hover:text-foreground">List a property</Link></div></div></footer> }
