@@ -1,0 +1,46 @@
+# 🏢 NyumbaReview
+
+**A Multi-Tenant Apartment Review and Advertising Platform for Landlords and Renters in Kenya.**
+
+NyumbaReview is a modern, web-based platform designed to solve the fragmentation and lack of trust in the Kenyan rental market. By combining a verified tenant review system with a secure multi-tenant landlord portal, the platform empowers renters to make informed decisions and allows honest landlords to stand out.
+
+## 🚀 Features
+
+### Public Marketplace
+- **Search & Filter:** Renters can browse approved apartment listings, filtering by location, price, and number of bedrooms.
+- **Detailed Listings:** View property descriptions, amenities, monthly rent, and verified average ratings.
+- **Direct Inquiries:** Logged-in renters can send direct messages to landlords without needing a broker.
+- **Verified Reviews:** Read honest, moderated reviews from past tenants.
+
+### Landlord Portal (Multi-Tenant)
+- **Secure Workspace:** Each landlord has a strictly isolated dashboard where they can only view their own properties and inquiries.
+- **Auto-Onboarding:** Renters who submit a property are automatically upgraded to a `landlord_owner` role.
+- **Listing Management:** Track the status of submitted properties (Pending, Approved, Rejected).
+- **Inbox:** Receive and read inquiries from interested tenants.
+
+### Admin Back Office
+- **Listing Moderation:** Review pending property submissions and approve or reject them before they go public.
+- **Review Moderation:** Prevent fake or malicious reviews by approving them before they appear on the marketplace.
+- **Platform Analytics:** View high-level stats on total users, listings, and pending actions.
+
+## 🛠️ Tech Stack
+
+- **Framework:** [Next.js 16](https://nextjs.org/) (App Router, Server Components, Server Actions)
+- **Frontend:** React 19, Tailwind CSS, Lucide Icons
+- **Database:** [Neon](https://neon.tech/) (Serverless PostgreSQL)
+- **Authentication:** [Better Auth](https://www.better-auth.com/) (Secure, cookie-based sessions)
+- **Database Driver:** `pg` (node-postgres)
+- **Language:** TypeScript
+
+## 🔐 Security & Architecture
+
+- **Role-Based Access Control (RBAC):** Strict server-side checks ensure Renters cannot access Landlord routes, and Landlords cannot access Admin routes.
+- **Data Isolation:** Multi-tenancy is enforced at the database query level (`WHERE owner_id = session.user.id`) preventing cross-tenant data leakage.
+- **Environment Security:** All database credentials and auth secrets are kept out of version control.
+
+## 💻 Getting Started (Local Development)
+
+### Prerequisites
+- Node.js (v18 or higher)
+- A [Neon](https://neon.tech/) PostgreSQL database
+- npm or pnpm
