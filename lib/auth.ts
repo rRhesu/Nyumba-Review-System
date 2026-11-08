@@ -1,45 +1,30 @@
 import { betterAuth } from 'better-auth'
 import { pool } from '@/lib/db'
 
-const developmentOrigins = [
-  'http://localhost:3000',
-  'http://localhost:3001',
-  process.env.V0_RUNTIME_URL,
-  process.env.V0_DEV_APP_URL,
-  process.env.V0_BUILD_URL,
-  process.env.V0_SANDBOX_URL,
-].filter((origin): origin is string => Boolean(origin))
-
 export const auth = betterAuth({
   database: pool,
-  baseURL:
-    process.env.BETTER_AUTH_URL ??
-    (process.env.VERCEL_PROJECT_PRODUCTION_URL
-      ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
-      : process.env.VERCEL_URL
-        ? `https://${process.env.VERCEL_URL}`
-        : process.env.V0_RUNTIME_URL),
-  emailAndPassword: { enabled: true, autoSignIn: true },
-  trustedOrigins:
-    process.env.NODE_ENV === 'development'
-      ? developmentOrigins
-      : [
-          ...(process.env.VERCEL_URL ? [`https://${process.env.VERCEL_URL}`] : []),
-          ...(process.env.VERCEL_PROJECT_PRODUCTION_URL
-            ? [`https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`]
-            : []),
-        ],
-  session: { expiresIn: 60 * 60 * 24 * 7, updateAge: 60 * 60 * 24 },
-  user: {
-    additionalFields: {
-      role: {
-        type: 'string',
-        required: false,
-        defaultValue: 'renter',
-        input: false,
-      },
-    },
+  
+  // This allows Better Auth to dynamically match the current Vercel URL
+  baseURL: {
+    allowedHosts: [
+      "localhost:3000",
+      "nyumba-review-system-8mtq.vercel.app",
+      "*.vercel.app", // Allows all preview deployments
+    ],
+    protocol: process.env.NODE_ENV === "development" ? "http" : "https",
   },
+
+  emailAndPassword: { enabled: true, autoSignIn: true },
+  
+  // Trust the main site and any Vercel preview URLs
+  trustedOrigins: [
+    "http://localhost:3000",
+    "https://nyumba-review-system-8mtq.vercel.app",
+    "https://*.vercel.app",
+  ],
+
+  session: { expiresIn: 60 * 60 * 24 * 7, updateAge: 60 * 60 * 24 },
+  
   ...(process.env.NODE_ENV === 'development'
     ? {
         advanced: {
