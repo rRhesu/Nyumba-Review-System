@@ -23,6 +23,17 @@ export const auth = betterAuth({
     "https://*.vercel.app",
   ],
 
+  user: {
+    additionalFields: {
+      role: {
+        type: 'string',
+        required: false,
+        defaultValue: 'renter',
+        input: false,
+      },
+    },
+  },
+
   session: { expiresIn: 60 * 60 * 24 * 7, updateAge: 60 * 60 * 24 },
   
   ...(process.env.NODE_ENV === 'development'
