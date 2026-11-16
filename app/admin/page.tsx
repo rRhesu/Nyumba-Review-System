@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic'
+
 import { headers } from 'next/headers'
 import { Building2, CheckCircle2, Clock, Flag, Star, Users } from 'lucide-react'
 import { auth } from '@/lib/auth'
