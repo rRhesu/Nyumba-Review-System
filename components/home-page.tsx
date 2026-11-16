@@ -41,14 +41,17 @@ const navItems = [
   { label: 'How it works', href: '/how-it-works' },
 ]
 
+// Helper to extract just the numbers from a price string (e.g. "KSh 48,000" -> 48000)
 function parsePrice(value: string): number {
   const digits = value.replace(/[^\d]/g, '')
   return digits ? parseInt(digits, 10) : 0
 }
 
-function parseBedrooms(units: string): number {
-  const match = units.match(/\d+/)
-  return match ? parseInt(match[0], 10) : 0
+// Helper to check if a specific bedroom number exists in the units string
+// e.g. finds "2" in "1 beds: 3, 2 beds: 5"
+function hasBedrooms(units: string, count: number): boolean {
+  const regex = new RegExp(`\\b${count}\\s*(bed|beds|bedroom|bedrooms|br)`, 'i')
+  return regex.test(units)
 }
 
 export default function HomePage({ listings }: { listings: HomeListing[] }) {
@@ -68,6 +71,7 @@ export default function HomePage({ listings }: { listings: HomeListing[] }) {
         const matchesQuery = `${listing.property_name} ${listing.location} ${listing.units}`
           .toLowerCase()
           .includes(query.toLowerCase())
+          
         const price = parsePrice(listing.monthly_rent)
         const matchesPrice =
           priceFilter === 'any' ||
@@ -76,14 +80,13 @@ export default function HomePage({ listings }: { listings: HomeListing[] }) {
             : priceFilter === 'mid'
               ? price > 35000 && price <= 60000
               : price > 60000)
-        const bedrooms = parseBedrooms(listing.units)
+
         const matchesBedrooms =
           bedroomFilter === 'any' ||
-          (bedroomFilter === 'one'
-            ? bedrooms === 1
-            : bedroomFilter === 'two'
-              ? bedrooms === 2
-              : bedrooms >= 3)
+          (bedroomFilter === 'one' && hasBedrooms(listing.units, 1)) ||
+          (bedroomFilter === 'two' && hasBedrooms(listing.units, 2)) ||
+          (bedroomFilter === 'three' && /([3-9]|[1-9][0-9])\s*(bed|beds|bedroom|bedrooms|br)/i.test(listing.units))
+
         return matchesQuery && matchesPrice && matchesBedrooms
       }),
     [listings, query, priceFilter, bedroomFilter],
@@ -464,4 +467,3 @@ export default function HomePage({ listings }: { listings: HomeListing[] }) {
     </main>
   )
 }
-
